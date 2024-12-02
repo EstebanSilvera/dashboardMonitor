@@ -9,9 +9,18 @@ const LineChart = () => {
 
   const [datos, setDatos] = useState([])
   useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL +"/alerts/by-date")
+    const token = localStorage.getItem("TOKEN")
+    fetch(import.meta.env.VITE_API_URL +"/alerts/by-date",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Agregar el token como Authorization Bearer
+        }
+      }
+    )
       .then(response => response.json())
-      .then(data => setDatos(data.data))
+      .then(data => {setDatos(data.data.alerts_by_date); localStorage.setItem("alertsAll",data.data.total_alerts)})
   }, [])
 
   // console.log(datos)

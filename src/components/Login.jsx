@@ -23,10 +23,11 @@ const Login = () => {
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.detail === "Inicio de sesion exitoso" ) {
-                        localStorage.setItem("ID", data.data.id);
-                        localStorage.setItem("USERNAME", data.data.username);
-                        localStorage.setItem("ROLE", data.data.role);
+                    if (data.detail == "Inicio de sesion exitoso" ) {
+                        localStorage.setItem("ID", data.data.user.id);
+                        localStorage.setItem("USERNAME", data.data.user.username);
+                        localStorage.setItem("ROLE", data.data.user.role);
+                        localStorage.setItem("TOKEN", data.data.access_token);
                         window.location.href = "/dashboard"
                     } else {
                         alert("Email or password incorrect")

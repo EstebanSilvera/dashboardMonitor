@@ -14,10 +14,12 @@ const Alertas = () => {
     const [severity, setSeverity] = useState(0)
 
     useEffect(() => {
+        const token = localStorage.getItem("TOKEN")
         fetch(import.meta.env.VITE_API_URL + '/alerts/all', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify({
                 "page": 1,
@@ -55,11 +57,12 @@ const Alertas = () => {
     // }
 
     const handlePrevPage = () => {
-
+        const token = localStorage.getItem("TOKEN")
         fetch(import.meta.env.VITE_API_URL + '/alerts/all', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify({
                 "page": pagination.page - 1,
@@ -74,11 +77,12 @@ const Alertas = () => {
     };
 
     const handleNextPage = () => {
-
+        const token = localStorage.getItem("TOKEN")
         fetch(import.meta.env.VITE_API_URL + '/alerts/all', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify({
                 "page": pagination.page + 1,
@@ -95,10 +99,13 @@ const Alertas = () => {
 
 
     const statusChangesEndpoint = (id, number) => {
+        const token = localStorage.getItem("TOKEN")
+
         fetch(import.meta.env.VITE_API_URL + `/alerts/update-status/${id}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify({
                 status: number
@@ -138,7 +145,15 @@ const Alertas = () => {
     }
 
     const DownloadAlerts = () => {
-        fetch(import.meta.env.VITE_API_URL + '/alerts/download-alerts')
+        const token = localStorage.getItem("TOKEN")
+
+        fetch(import.meta.env.VITE_API_URL + '/alerts/download-alerts',{
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al descargar el archivo");
@@ -195,7 +210,15 @@ const Alertas = () => {
 
     const [reglas, setReglas] = useState([])
     useEffect(() => {
-        fetch(import.meta.env.VITE_API_URL + "/alerts/types")
+        const token = localStorage.getItem("TOKEN")
+
+        fetch(import.meta.env.VITE_API_URL + "/alerts/types",{
+            method: "GET",
+            headers:{
+                "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+            }
+        })
             .then(response => response.json())
             .then(data => setReglas(data.data))
             .catch(error => console.error("Error:", error));

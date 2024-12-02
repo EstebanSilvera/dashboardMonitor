@@ -17,7 +17,7 @@ const Usuarios = () => {
 
         const informationUser = [username, role, email, password, passwordConfirm]
         const informationUserFilter = informationUser.filter(response => response !== "")
-
+        const token = localStorage.getItem("TOKEN")
         if (informationUserFilter.length === 5) {
             if (password === passwordConfirm) {
                 if (idUser != 0 && roleUser === "admin") {
@@ -26,6 +26,7 @@ const Usuarios = () => {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
+                            "Authorization": `Bearer ${token}`,
                         },
                         body: JSON.stringify({
                             user_id: idUser,
@@ -60,9 +61,14 @@ const Usuarios = () => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        fetch(import.meta.env.VITE_API_URL +'/users/all', {
-            page: 1,
-            size: 10
+        const token = localStorage.getItem("TOKEN")
+        fetch(import.meta.env.VITE_API_URL +'/users/all?page=1&size=10', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`, // Agregar el token como Authorization Bearer
+            }
+
         })
             .then(response => response.json())
             .then(data => setUsers(data.data));
@@ -77,10 +83,10 @@ const Usuarios = () => {
                     <h2 className="text-lg font-semibold text-gray-700 capitalize dark:text-white">All Users</h2>
                     <div className="flex justify-center text-lg font-semibold text-gray-700 capitalize dark:text-white bg-blue-400 rounded-xl">
 
-                        <button 
-                        onClick={() => setIsOpen(true)} 
-                        className="px-8 py-2.5 leading-5 text-black dark:text-white transition-colors duration-300 transform rounded-md focus:outline-none text-sm"
-                        disabled= {roleUser !== "admin"}
+                        <button
+                            onClick={() => setIsOpen(true)}
+                            className="px-8 py-2.5 leading-5 text-black dark:text-white transition-colors duration-300 transform rounded-md focus:outline-none text-sm"
+                            disabled={roleUser !== "admin"}
                         >
                             Registrate user
                         </button>

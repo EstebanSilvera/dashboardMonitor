@@ -9,7 +9,16 @@ const PieChart = () => {
 
   const [datos, setDatos] = useState([])
   useEffect(() => {
-    fetch("http://192.168.68.115:8000/alerts/by-category")
+    const token = localStorage.getItem("TOKEN")
+    fetch(import.meta.env.VITE_API_URL +"/alerts/by-category",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Agregar el token como Authorization Bearer
+        }
+      }
+    )
       .then(response => response.json())
       .then(data => setDatos(data.data))
   }, [])
@@ -40,14 +49,14 @@ const PieChart = () => {
       },
       title: {
         display: true,
-        text: 'Numero de Logs de los ultimos 2 dias',
+        text: 'Cantidad e alertas segun du tipo',
         color: '#FFFFFF'
       },
     },
   };
 
   return (
-    <div className="max-w-lg mx-auto">
+    <div className='max-w-xl mx-auto'>
       <Pie data={data} options={options} />
     </div>
   );

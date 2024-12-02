@@ -6,7 +6,14 @@ const LogsEvent = () => {
     const [logs, setLogs] = useState([])
 
     useEffect(() => {
-        fetch(import.meta.env.VITE_API_URL + '/logs/all?page=1&size=12')
+        const token = localStorage.getItem("TOKEN")
+        fetch(import.meta.env.VITE_API_URL + '/logs/all?page=1&size=12',{
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            }
+        })
             .then(response => response.json())
             .then(data => setLogs(data));
     }, [])
@@ -47,7 +54,7 @@ const LogItem = ({ log, index }) => (
                 <h3 className="m-4 ">{index + 1}</h3>
             </div>
 
-            <div className="bg-white h-[16rem] py-8 my-auto rounded-md px-4">
+            <div className="bg-white h-[16rem] py-8 my-auto rounded-md overflow-y-auto px-4">
                 <div className="flex items-center justify-between mb-2 ">
                     <span className="text-gray-800 font-bold">{log?.type?.toUpperCase()}</span>
                     <span className="text-gray-400 text-sm">{new Date(log?.timestamp).toLocaleString()}</span>

@@ -1,16 +1,15 @@
 import './App.css'
-import Login from './components/login'
+import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import Sidebar from './components/Sidebar'
 import Alertas from './components/Alertas'
 import PageError from './components/PageError'
 import Usuarios from './components/Usuarios'
 import LogsEvent from './components/logsEvent'
-
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import ProtectedRoute from './components/ProtectedRoute'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 
 function App() {
-  // const [count, setCount] = useState(0)
 
   return (
     <>
@@ -20,17 +19,22 @@ function App() {
           {/* Ruta principal */}
           <Route
             index
-            element={
-              localStorage.getItem("TOKEN") ? <Sidebar /> : <Login />
-            }
+            element={localStorage.getItem("TOKEN") ? <Sidebar /> : <Login />}
           />
 
-          {/* Sub-rutas cuando el usuario está autenticado */}
-          <Route path='/' element={<Sidebar />}>
-            <Route path='/Dashboard' element={<Dashboard />} />
-            <Route path='/Alertas' element={<Alertas />} />
-            <Route path='/Usuarios' element={<Usuarios />} />
-            <Route path='/LogsEvent' element={<LogsEvent />} />
+          {/* Rutas protegidas */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Sidebar />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="Dashboard" element={<Dashboard />} />
+            <Route path="Alertas" element={<Alertas />} />
+            <Route path="Usuarios" element={<Usuarios />} />
+            <Route path="LogsEvent" element={<LogsEvent />} />
           </Route>
 
           {/* Ruta para el componente de 404 */}

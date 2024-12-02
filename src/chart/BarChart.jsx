@@ -8,13 +8,24 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const BarChart = () => {
 
   const [datos, setDatos] = useState([])
+  const [datosAll, setDatosAll] = useState([])
+  
   useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + "/logs/by-date")
+    const token = localStorage.getItem("TOKEN")
+    fetch(import.meta.env.VITE_API_URL + "/logs/by-date",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Agregar el token como Authorization Bearer
+        }
+      }
+    )
       .then(response => response.json())
-      .then(data => setDatos(data.data))
+      .then(data => {setDatos(data.data.logs_by_date); localStorage.setItem("logsAll",data.data.total_logs)})
   }, [])
 
-  console.log(datos)
+  console.log(datosAll)
 
   const data = {
     labels: datos.map((alert) => (alert.date)),
